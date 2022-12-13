@@ -1,5 +1,6 @@
 package com.revature.pojo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Ticket {
@@ -7,13 +8,13 @@ public class Ticket {
     private Double amount;
     private String description;
     private String status;
-    private LocalDateTime dateSubmitted;
-    private LocalDateTime dateProcessed;
+    private LocalDate dateSubmitted;
+    private LocalDate dateProcessed;
     private Integer userId;
 
     public Ticket() {}
 
-    public Ticket(Integer ticketId, Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
+    public Ticket(Integer ticketId, Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed, Integer userId) {
         this.ticketId = ticketId;
         this.amount = amount;
         this.description = description;
@@ -23,7 +24,7 @@ public class Ticket {
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
+    public Ticket(Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed, Integer userId) {
         this.amount = amount;
         this.description = description;
         this.status = status;
@@ -32,7 +33,7 @@ public class Ticket {
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed) {
+    public Ticket(Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed) {
         this.amount = amount;
         this.description = description;
         this.status = status;
@@ -72,19 +73,19 @@ public class Ticket {
         this.status = status;
     }
 
-    public LocalDateTime getDateSubmitted() {
+    public LocalDate getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(LocalDateTime dateSubmitted) {
+    public void setDateSubmitted(LocalDate dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
-    public LocalDateTime getDateProcessed() {
+    public LocalDate getDateProcessed() {
         return dateProcessed;
     }
 
-    public void setDateProcessed(LocalDateTime dateProcessed) {
+    public void setDateProcessed(LocalDate dateProcessed) {
         this.dateProcessed = dateProcessed;
     }
 
