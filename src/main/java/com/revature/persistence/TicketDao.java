@@ -106,6 +106,101 @@ public class TicketDao {
         return null;
     }
 
+    public List<Ticket> getAllTicketsForUser(int userId){
+        try{
+            String sql = "SELECT * FROM tickets WHERE user_id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+
+            while (result.next()){
+                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
+                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
+                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ticket> getAllPendingTicketsForUser(int userId){
+        try{
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'pending'";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+
+            while (result.next()){
+                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
+                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
+                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ticket> getAllAcceptedTicketsForUser(int userId){
+        try{
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'accepted'";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+
+            while (result.next()){
+                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
+                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
+                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ticket> getAllRejectedTicketsForUser(int userId){
+        try{
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'rejected'";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+
+            while (result.next()){
+                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
+                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
+                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public void update(Ticket ticket){
         try{
@@ -125,11 +220,11 @@ public class TicketDao {
         }
     }
 
-    public void delete(Ticket ticket){
+    public void delete(int ticketId){
         try{
             String sql = "DELETE FROM ticket WHERE ticket_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, ticket.getTicketId());
+            pstmt.setInt(1, ticketId);
             pstmt.executeUpdate();
 
         }catch(SQLException e){

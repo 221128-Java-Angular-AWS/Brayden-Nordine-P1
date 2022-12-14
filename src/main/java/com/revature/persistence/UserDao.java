@@ -1,5 +1,6 @@
 package com.revature.persistence;
 
+import com.revature.exceptions.DuplicateUserException;
 import com.revature.exceptions.IncorrectPasswordException;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.pojo.User;
@@ -25,7 +26,7 @@ public class UserDao {
     //Delete existing user
 
     //Create a new user
-    public void create(User user){
+    public void create(User user) throws DuplicateUserException {
         try {
             String sql = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -37,6 +38,9 @@ public class UserDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            if(e.getMessage().contains("duplicate key value")){
+                throw new DuplicateUserException("User with the given email already exists");
+            }
         }
     }
 
@@ -69,14 +73,16 @@ public class UserDao {
     //retrieve a single user, using the userid
     public User getUser(Integer userId){
         try {
-            String sql = "SELECT * FROM users WHERE userId = ?";
+            String sql = "SELECT * FROM users WHERE user_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
             ResultSet result = pstmt.executeQuery();
 
-            User user = new User(result.getInt("user_id"), result.getString("email"),
-                    result.getString("password"), result.getString("role"));
-            return user;
+            if(result.next()) {
+                User user = new User(result.getInt("user_id"), result.getString("email"),
+                        result.getString("password"), result.getString("role"));
+                return user;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

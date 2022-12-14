@@ -1,5 +1,7 @@
 package com.revature.persistence;
 
+import org.postgresql.util.PSQLException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -29,15 +31,15 @@ public class ConnectionManager {
 
             StringBuilder connectionString = new StringBuilder();
             connectionString.append("jdbc:postgresql://");
-            connectionString.append(prop.getProperty("host"));
+            connectionString.append(prop.getProperty("Host"));
             connectionString.append(":");
-            connectionString.append(prop.getProperty("port"));
+            connectionString.append(prop.getProperty("Port"));
             connectionString.append("/");
             connectionString.append(prop.getProperty("dbname"));
             connectionString.append("?user=");
-            connectionString.append(prop.getProperty("username"));
+            connectionString.append(prop.getProperty("Username"));
             connectionString.append("&password=");
-            connectionString.append(prop.getProperty("password"));
+            connectionString.append(prop.getProperty("Password"));
 
             Class.forName(prop.getProperty("driver"));
 
@@ -50,7 +52,7 @@ public class ConnectionManager {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

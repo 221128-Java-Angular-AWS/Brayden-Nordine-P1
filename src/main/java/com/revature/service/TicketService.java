@@ -33,6 +33,10 @@ public class TicketService {
     }
 
     public void deleteTicket(Ticket ticket){
-        dao.delete(ticket);
+        dao.delete(ticket.getTicketId());
+    }
+
+    public void deleteTicket(int ticketId){
+        dao.delete(ticketId);
     }
 }
