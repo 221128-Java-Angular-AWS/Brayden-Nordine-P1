@@ -36,7 +36,7 @@ public class UserServlet extends HttpServlet {
         List<User> users;
 
         //Get a single user
-        if(params.keySet().contains("userId")){
+        if(params.containsKey("userId")){
             User user = service.getUser(Integer.parseInt(params.get("userId")[0]));
             users = new ArrayList<User>();
             users.add(user);

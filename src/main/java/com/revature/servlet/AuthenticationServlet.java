@@ -40,9 +40,15 @@ public class AuthenticationServlet extends HttpServlet {
             user = service.validateLogin(user);
             resp.setStatus(200);
             resp.getWriter().println(mapper.writeValueAsString(user));
-            Cookie auth = new Cookie("userId", user.getUserId().toString());
-            auth.setMaxAge(600);
-            resp.addCookie(auth);
+
+            Cookie userIdCookie = new Cookie("userId", user.getUserId().toString());
+            userIdCookie.setMaxAge(600);
+            resp.addCookie(userIdCookie);
+
+            Cookie roleCookie = new Cookie("role", user.getRole().toString());
+            roleCookie.setMaxAge(600);
+            resp.addCookie(roleCookie);
+
         } catch (UserNotFoundException | IncorrectPasswordException e) {
             resp.setStatus(401);
             resp.getWriter().println(e.getMessage());

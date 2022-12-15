@@ -25,11 +25,11 @@ public class TicketDao {
                     "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setDouble(1, ticket.getAmount());
-            pstmt.setString(1, ticket.getDescription());
-            pstmt.setString(1, ticket.getStatus());
-            pstmt.setDate(1, Date.valueOf(ticket.getDateSubmitted()));
-            pstmt.setDate(1, Date.valueOf(ticket.getDateProcessed()));
-            pstmt.setInt(1, ticket.getUserId());
+            pstmt.setString(2, ticket.getDescription());
+            pstmt.setString(3, ticket.getStatus());
+            pstmt.setDate(4, Date.valueOf(ticket.getDateSubmitted()));
+            pstmt.setDate(5, ticket.getDateProcessed() != null ? Date.valueOf(ticket.getDateProcessed()) : null);
+            pstmt.setInt(6, ticket.getUserId());
 
             pstmt.executeUpdate();
         }catch(SQLException e){
