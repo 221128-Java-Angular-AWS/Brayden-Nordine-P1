@@ -37,9 +37,25 @@ public class TicketDao {
         }
     }
 
+    public String getTicketStatus(int ticketId){
+        try{
+            String sql = "SELECT status FROM tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, ticketId);
+            ResultSet result = pstmt.executeQuery();
+
+            if(result.next()){
+                return result.getString("status");
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public List<Ticket> getAllTickets(){
         try{
-            String sql = "SELECT * FROM tickets";
+            String sql = "SELECT * FROM tickets ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
@@ -47,7 +63,8 @@ public class TicketDao {
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
                         result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -62,7 +79,7 @@ public class TicketDao {
 
     public List<Ticket> getAllPendingTickets(){
         try{
-            String sql = "SELECT * FROM tickets WHERE status = 'pending'";
+            String sql = "SELECT * FROM tickets WHERE status = 'pending' ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
@@ -70,7 +87,8 @@ public class TicketDao {
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
                         result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -85,7 +103,7 @@ public class TicketDao {
 
     public List<Ticket> getAllProcessedTickets(){
         try{
-            String sql = "SELECT * FROM tickets WHERE NOT status = 'pending'";
+            String sql = "SELECT * FROM tickets WHERE NOT status = 'pending' ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
@@ -108,7 +126,7 @@ public class TicketDao {
 
     public List<Ticket> getAllTicketsForUser(int userId){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ?";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
             ResultSet result = pstmt.executeQuery();
@@ -117,7 +135,8 @@ public class TicketDao {
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
                         result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -132,7 +151,7 @@ public class TicketDao {
 
     public List<Ticket> getAllPendingTicketsForUser(int userId){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'pending'";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'pending' ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
             ResultSet result = pstmt.executeQuery();
@@ -141,7 +160,8 @@ public class TicketDao {
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
                         result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -154,9 +174,9 @@ public class TicketDao {
         return null;
     }
 
-    public List<Ticket> getAllAcceptedTicketsForUser(int userId){
+    public List<Ticket> getAllApprovedTicketsForUser(int userId){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'accepted'";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'approved' ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
             ResultSet result = pstmt.executeQuery();
@@ -180,7 +200,31 @@ public class TicketDao {
 
     public List<Ticket> getAllRejectedTicketsForUser(int userId){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'rejected'";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'rejected' ORDER BY date_submitted";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+
+            while (result.next()){
+                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
+                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
+                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ticket> getAllProcessedTicketsForUser(int userId){
+        try{
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND NOT status = 'pending' ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
             ResultSet result = pstmt.executeQuery();
@@ -205,14 +249,15 @@ public class TicketDao {
     public void update(Ticket ticket){
         try{
             String sql = "UPDATE tickets SET amount = ?, description = ?, status = ?, date_submitted = ?, " +
-                    "date_processed = ?, user_id = ?";
+                    "date_processed = ?, user_id = ? WHERE ticket_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
             pstmt.setString(3, ticket.getStatus());
             pstmt.setDate(4, Date.valueOf(ticket.getDateSubmitted()));
-            pstmt.setDate(5, Date.valueOf(ticket.getDateProcessed()));
+            pstmt.setDate(5, ticket.getDateProcessed() != null ? Date.valueOf(ticket.getDateProcessed()) : null);
             pstmt.setInt(6, ticket.getUserId());
+            pstmt.setInt(7, ticket.getTicketId());
 
             pstmt.executeUpdate();
         }catch(SQLException e){

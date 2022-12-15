@@ -1,6 +1,7 @@
 package com.revature.service;
 
 import com.revature.exceptions.InvalidTicketException;
+import com.revature.exceptions.TicketProcessingException;
 import com.revature.persistence.TicketDao;
 import com.revature.pojo.Ticket;
 
@@ -27,16 +28,52 @@ public class TicketService {
         dao.create(ticket);
     }
 
-    public List<Ticket> getAllTickets(){
+    public List<Ticket> getTickets(){
         return dao.getAllTickets();
     }
 
-    public List<Ticket> getAllPendingTickets(){
-        return dao.getAllPendingTickets();
+    public List<Ticket> getTickets(String status){
+        switch (status){
+            case "pending":
+                return dao.getAllPendingTickets();
+            case "!pending":
+                return dao.getAllProcessedTickets();
+            default:
+                return dao.getAllTickets();
+        }
     }
 
-    public List<Ticket> getAllProcessedTickets(){
-        return dao.getAllProcessedTickets();
+    public List<Ticket> getTickets(int userId){
+        return dao.getAllTicketsForUser(userId);
+    }
+
+    public List<Ticket> getTickets(int userId, String status){
+        switch (status){
+            case "pending":
+                return dao.getAllPendingTicketsForUser(userId);
+            case "approved":
+                return dao.getAllApprovedTicketsForUser(userId);
+            case "rejected":
+                return dao.getAllRejectedTicketsForUser(userId);
+            case "!pending":
+                return dao.getAllProcessedTicketsForUser(userId);
+            default:
+                return dao.getAllTicketsForUser(userId);
+        }
+    }
+
+    public void processTicket(Ticket ticket) throws TicketProcessingException {
+        if(dao.getTicketStatus(ticket.getTicketId()).equals("pending")) {
+            if (ticket.getStatus().equals("approved") || ticket.getStatus().equals("rejected")) {
+                ticket.setDateProcessed(LocalDate.now());
+                dao.update(ticket);
+            }
+            else{
+                throw new TicketProcessingException("Not a valid ticket status");
+            }
+        }else{
+            throw new TicketProcessingException("Processed tickets can not be processed");
+        }
     }
 
     public void updateTicket(Ticket ticket){
