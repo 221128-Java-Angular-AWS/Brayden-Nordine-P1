@@ -53,6 +53,17 @@ public class TicketServlet extends HttpServlet {
             resp.setStatus(200);
             resp.getWriter().println(ticketsString);
         }else if(role.equals("employee")){
+            int userId = -1;
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userId"))
+                    userId = Integer.parseInt(cookie.getValue());
+            }
+
+            List<Ticket> tickets = service.getTickets(userId, req.getParameter("status"));
+            String ticketsString = mapper.writeValueAsString(tickets);
+
+            resp.setStatus(200);
+            resp.getWriter().println(ticketsString);
 
         }else{
             resp.setStatus(401);

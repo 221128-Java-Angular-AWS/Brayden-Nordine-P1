@@ -33,14 +33,15 @@ public class TicketService {
     }
 
     public List<Ticket> getTickets(String status){
-        switch (status){
-            case "pending":
-                return dao.getAllPendingTickets();
-            case "!pending":
-                return dao.getAllProcessedTickets();
-            default:
-                return dao.getAllTickets();
+        if(status != null) {
+            switch (status) {
+                case "pending":
+                    return dao.getAllPendingTickets();
+                case "!pending":
+                    return dao.getAllProcessedTickets();
+            }
         }
+        return dao.getAllTickets();
     }
 
     public List<Ticket> getTickets(int userId){
@@ -48,18 +49,19 @@ public class TicketService {
     }
 
     public List<Ticket> getTickets(int userId, String status){
-        switch (status){
-            case "pending":
-                return dao.getAllPendingTicketsForUser(userId);
-            case "approved":
-                return dao.getAllApprovedTicketsForUser(userId);
-            case "rejected":
-                return dao.getAllRejectedTicketsForUser(userId);
-            case "!pending":
-                return dao.getAllProcessedTicketsForUser(userId);
-            default:
-                return dao.getAllTicketsForUser(userId);
+        if(status != null) {
+            switch (status) {
+                case "pending":
+                    return dao.getAllPendingTicketsForUser(userId);
+                case "approved":
+                    return dao.getAllApprovedTicketsForUser(userId);
+                case "rejected":
+                    return dao.getAllRejectedTicketsForUser(userId);
+                case "!pending":
+                    return dao.getAllProcessedTicketsForUser(userId);
+            }
         }
+        return dao.getAllTicketsForUser(userId);
     }
 
     public void processTicket(Ticket ticket) throws TicketProcessingException {
