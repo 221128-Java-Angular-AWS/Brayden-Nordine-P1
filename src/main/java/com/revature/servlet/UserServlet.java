@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class UserServlet extends HttpServlet {
     private UserService service;
@@ -30,22 +29,28 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<String, String[]> params = req.getParameterMap();
-
         List<User> users;
+        String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
+        if(!idCookie.equals("")){
+            String role = CookieHandler.getCookieValue("role", req.getCookies());
+            if(!role.equals("manager")) {
+                users = new ArrayList<>();
+                users.add(service.getUser(Integer.parseInt(idCookie)));
+            }else if (req.getParameter("userId") != null){
+                users = new ArrayList<>();
+                users.add(service.getUser(Integer.parseInt(req.getParameter("userId"))));
+            }else{
+                users = service.getAllUsers();
+            }
 
-        //Get a single user
-        if(params.containsKey("userId")){
-            User user = service.getUser(Integer.parseInt(params.get("userId")[0]));
-            users = new ArrayList<User>();
-            users.add(user);
-        }else { //Get all users
-            users = service.getAllUsers();
+            String usersString = mapper.writeValueAsString(users);
+            resp.setStatus(200);
+            resp.getWriter().println(usersString);
+        }else{
+            resp.setStatus(401);
+            resp.getWriter().println("Not logged in");
         }
 
-        String usersString = mapper.writeValueAsString(users);
-        resp.setStatus(200);
-        resp.getWriter().println(usersString);
     }
 
     @Override
@@ -72,7 +77,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
-        if(idCookie != "") {
+        if(!idCookie.equals("")) {
             int userId = Integer.parseInt(idCookie);
             String role = CookieHandler.getCookieValue("role", req.getCookies());
 

@@ -31,7 +31,7 @@ public class TicketServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
-        if(idCookie != ""){
+        if(!idCookie.equals("")){
             int userId = Integer.parseInt(idCookie);
             List<Ticket> tickets;
             if(req.getParameter("type") != null){
@@ -54,7 +54,7 @@ public class TicketServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
 
-        if(idCookie != ""){
+        if(!idCookie.equals("")){
             int userId = Integer.parseInt(idCookie);
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
