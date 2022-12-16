@@ -19,6 +19,7 @@ public class TicketDao {
     //Update a ticket
     //Delete a ticket
 
+    //Create new ticket
     public void create(Ticket ticket){
         try {
             String sql = "INSERT INTO tickets (amount, description, type, status, date_submitted, date_processed, user_id)" +
@@ -38,6 +39,7 @@ public class TicketDao {
         }
     }
 
+    //Return the status of a specific ticket
     public String getTicketStatus(int ticketId){
         try{
             String sql = "SELECT status FROM tickets WHERE ticket_id = ?";
@@ -54,6 +56,7 @@ public class TicketDao {
         return "";
     }
 
+    //return all tickets
     public List<Ticket> getAllTickets(){
         try{
             String sql = "SELECT * FROM tickets ORDER BY date_submitted";
@@ -79,6 +82,7 @@ public class TicketDao {
         return null;
     }
 
+    //Return all tickets, filtered by status
     public List<Ticket> getAllTickets(String status){
         try{
             String sql = "SELECT * FROM tickets WHERE status = ? ORDER BY date_submitted";
@@ -105,6 +109,7 @@ public class TicketDao {
         return null;
     }
 
+    //Return all tickets belonging to a specific user
     public List<Ticket> getAllTicketsForUser(int userId){
         try{
             String sql = "SELECT * FROM tickets WHERE user_id = ? ORDER BY date_submitted";
@@ -131,6 +136,7 @@ public class TicketDao {
         return null;
     }
 
+    //Return all tickets belonging to a specific user, filtered by status
     public List<Ticket> getAllTicketsForUser(int userId, String status){
         try{
             String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = ? ORDER BY date_submitted";
@@ -158,6 +164,7 @@ public class TicketDao {
         return null;
     }
 
+    //Return all tickets belonging to a specific user, filtered by reimbursement type
     public List<Ticket> getAllTicketsForUserByType(int userId, String type){
         try{
             String sql = "SELECT * FROM tickets WHERE user_id = ? AND type = ? ORDER BY date_submitted";
@@ -185,6 +192,7 @@ public class TicketDao {
         return null;
     }
 
+    //Return all tickets belonging to a specific user, filtered by reimbursement type and status
     public List<Ticket> getAllTicketsForUserByType(int userId, String type, String status){
         try{
             String sql = "SELECT * FROM tickets WHERE user_id = ? AND type = ? AND status = ? ORDER BY date_submitted";
@@ -213,6 +221,7 @@ public class TicketDao {
         return null;
     }
 
+    //Update/Process a ticket
     public void update(Ticket ticket){
         try{
             String sql = "UPDATE tickets SET amount = ?, description = ?, type = ?, status = ?, date_submitted = ?, " +

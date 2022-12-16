@@ -28,11 +28,14 @@ public class TicketProcessingServlet extends HttpServlet {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    //Get pending tickets for managers
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Make sure user is logged in as a manager
         String role = CookieHandler.getCookieValue("role", req.getCookies());
-
         if(role.equals("manager")) {
+
+            //Get pending tickets, filter by userId if appropriate
             List<Ticket> tickets = null;
             if (req.getParameter("userId") != null) {
                 int userId = Integer.parseInt(req.getParameter("userId"));
@@ -42,6 +45,7 @@ public class TicketProcessingServlet extends HttpServlet {
             }
             String ticketsString = mapper.writeValueAsString(tickets);
 
+            //return tickets
             resp.setStatus(200);
             resp.getWriter().println(ticketsString);
         }else{
@@ -50,11 +54,14 @@ public class TicketProcessingServlet extends HttpServlet {
         }
     }
 
+    //Processing tickets
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Make sure user is logged in as a manager
         String role = CookieHandler.getCookieValue("role", req.getCookies());
-
         if(role.equals("manager")){
+
+            //Get updated ticket info from request
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
 
@@ -64,10 +71,11 @@ public class TicketProcessingServlet extends HttpServlet {
 
             Ticket ticket = mapper.readValue(builder.toString(), Ticket.class);
 
+            //Process the ticket
             try {
                 service.processTicket(ticket);
                 resp.setStatus(200);
-            } catch (UnauthorizedException e) {
+            } catch (UnauthorizedException e) { //Exception for trying to process a processed ticket
                 resp.setStatus(400);
                 resp.getWriter().println(e.getMessage());
             }

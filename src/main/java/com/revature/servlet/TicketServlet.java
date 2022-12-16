@@ -28,11 +28,15 @@ public class TicketServlet extends HttpServlet {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    //Get user's tickets
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Make sure user is logged in
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
         if(!idCookie.equals("")){
             int userId = Integer.parseInt(idCookie);
+
+            //Get the list of tickets, filter by type and status when appropriate
             List<Ticket> tickets;
             if(req.getParameter("type") != null){
                 tickets = service.getTicketsByType(userId, req.getParameter("type"), req.getParameter("status"));
@@ -41,6 +45,7 @@ public class TicketServlet extends HttpServlet {
             }
             String ticketsString = mapper.writeValueAsString(tickets);
 
+            //return tickets
             resp.setStatus(200);
             resp.getWriter().println(ticketsString);
 
@@ -50,12 +55,15 @@ public class TicketServlet extends HttpServlet {
         }
     }
 
+    //Create a new ticket
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Make sure user is logged in
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
-
         if(!idCookie.equals("")){
             int userId = Integer.parseInt(idCookie);
+
+            //Get ticket info from request
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
 
@@ -64,12 +72,13 @@ public class TicketServlet extends HttpServlet {
             }
 
             Ticket ticket = mapper.readValue(builder.toString(), Ticket.class);
-            ticket.setUserId(userId);
+            ticket.setUserId(userId); //add user's ID to the ticket
 
+            //create the ticket
             try {
                 service.createTicket(ticket);
                 resp.setStatus(201);
-            }catch(InvalidTicketException e){
+            }catch(InvalidTicketException e){ //Exception for invalid amount/description
                 resp.setStatus(400);
                 resp.getWriter().println(e.getMessage());
             }

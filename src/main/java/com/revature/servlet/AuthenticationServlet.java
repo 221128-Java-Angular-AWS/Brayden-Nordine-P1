@@ -25,8 +25,10 @@ public class AuthenticationServlet extends HttpServlet {
         mapper = new ObjectMapper();
     }
 
+    //Authenticate user login
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user login info from the request
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = req.getReader();
 
@@ -36,6 +38,7 @@ public class AuthenticationServlet extends HttpServlet {
 
         User user = mapper.readValue(builder.toString(), User.class);
 
+        //Log in, send authentication cookies in response if successful
         try {
             user = service.validateLogin(user);
             resp.setStatus(200);
@@ -49,7 +52,7 @@ public class AuthenticationServlet extends HttpServlet {
             roleCookie.setMaxAge(600);
             resp.addCookie(roleCookie);
 
-        } catch (UserNotFoundException | IncorrectPasswordException e) {
+        } catch (UserNotFoundException | IncorrectPasswordException e) { //Exceptions for incorrect email or password
             resp.setStatus(401);
             resp.getWriter().println(e.getMessage());
         }

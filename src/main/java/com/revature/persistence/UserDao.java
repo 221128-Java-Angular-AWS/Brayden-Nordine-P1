@@ -117,6 +117,7 @@ public class UserDao {
         return null;
     }
 
+    //Get a specified user's role
     public String getUserRole(int userId){
         try{
             String sql = "SELECT role FROM users WHERE user_id = ?";

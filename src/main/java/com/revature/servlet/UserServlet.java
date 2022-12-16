@@ -27,11 +27,15 @@ public class UserServlet extends HttpServlet {
         mapper = new ObjectMapper();
     }
 
+    //Get user data
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users;
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
+
+        //make sure user is logged in
         if(!idCookie.equals("")){
+            //Call different services based on user's role and filters
             String role = CookieHandler.getCookieValue("role", req.getCookies());
             if(!role.equals("manager")) {
                 users = new ArrayList<>();
@@ -43,6 +47,7 @@ public class UserServlet extends HttpServlet {
                 users = service.getAllUsers();
             }
 
+            //return user info
             String usersString = mapper.writeValueAsString(users);
             resp.setStatus(200);
             resp.getWriter().println(usersString);
@@ -53,8 +58,10 @@ public class UserServlet extends HttpServlet {
 
     }
 
+    //Create new user
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user data from the request
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = req.getReader();
 
@@ -64,23 +71,28 @@ public class UserServlet extends HttpServlet {
 
         User user = mapper.readValue(builder.toString(), User.class);
 
+        //Try to create the user
         try {
             service.registerUser(user);
             resp.setStatus(201);
-        }catch (DuplicateUserException | InvalidEmailException e){
+        }catch (DuplicateUserException | InvalidEmailException e){ //Exceptions for duplicate/invalid emails
             resp.setStatus(400);
             resp.getWriter().print(e.getMessage());
         }
 
     }
 
+    //Update an existing user
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        //Make sure user is logged in
         String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
         if(!idCookie.equals("")) {
             int userId = Integer.parseInt(idCookie);
             String role = CookieHandler.getCookieValue("role", req.getCookies());
 
+            //Get updated user info from the request
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
 
@@ -89,15 +101,18 @@ public class UserServlet extends HttpServlet {
             }
 
             User user = mapper.readValue(builder.toString(), User.class);
+
+            //Make sure an employee can't update another user's info
             if(!role.equals("manager") && userId != user.getUserId()){
                 resp.setStatus(401);
                 resp.getWriter().println("Can not edit another user's account");
                 return;
             }
 
+            //update the info
             try {
                 service.updateUser(user, role);
-            } catch (UnauthorizedException e) {
+            } catch (UnauthorizedException e) { //Exception for trying to change your role as an employee
                 resp.setStatus(401);
                 resp.getWriter().println(e.getMessage());
                 return;
