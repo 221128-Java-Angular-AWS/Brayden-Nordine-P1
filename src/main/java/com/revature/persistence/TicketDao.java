@@ -265,16 +265,4 @@ public class TicketDao {
         }
     }
 
-    public void delete(int ticketId){
-        try{
-            String sql = "DELETE FROM ticket WHERE ticket_id = ?";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, ticketId);
-            pstmt.executeUpdate();
-
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
-
 }

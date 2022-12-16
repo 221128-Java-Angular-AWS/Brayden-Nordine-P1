@@ -126,16 +126,4 @@ public class UserDao {
         }
     }
 
-    //Delete a single user
-    public void delete(User user){
-        try{
-            String sql = "DELETE FROM users WHERE user_id=?";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, user.getUserId());
-            pstmt.executeUpdate();
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-    }
-
 }

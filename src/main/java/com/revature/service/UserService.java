@@ -46,12 +46,4 @@ public class UserService {
         return dao.getAllUsers();
     }
 
-    public void updateUser(User user){
-        dao.update(user);
-    }
-
-    public void deleteUser(User user){
-        dao.delete(user);
-    }
-
 }

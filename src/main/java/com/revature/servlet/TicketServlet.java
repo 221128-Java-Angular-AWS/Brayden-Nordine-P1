@@ -88,14 +88,4 @@ public class TicketServlet extends HttpServlet {
             resp.getWriter().println("You are not logged in");
         }
     }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
-    }
 }

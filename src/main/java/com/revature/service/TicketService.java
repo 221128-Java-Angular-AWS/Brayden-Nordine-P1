@@ -78,16 +78,4 @@ public class TicketService {
             throw new TicketProcessingException("Processed tickets can not be processed");
         }
     }
-
-    public void updateTicket(Ticket ticket){
-        dao.update(ticket);
-    }
-
-    public void deleteTicket(Ticket ticket){
-        dao.delete(ticket.getTicketId());
-    }
-
-    public void deleteTicket(int ticketId){
-        dao.delete(ticketId);
-    }
 }
