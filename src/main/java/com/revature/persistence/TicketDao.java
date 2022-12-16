@@ -21,15 +21,16 @@ public class TicketDao {
 
     public void create(Ticket ticket){
         try {
-            String sql = "INSERT INTO tickets (amount, description, status, date_submitted, date_processed, user_id)" +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO tickets (amount, description, type, status, date_submitted, date_processed, user_id)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
-            pstmt.setString(3, ticket.getStatus());
-            pstmt.setTimestamp(4, Timestamp.valueOf(ticket.getDateSubmitted()));
-            pstmt.setTimestamp(5, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
-            pstmt.setInt(6, ticket.getUserId());
+            pstmt.setString(3, ticket.getType());
+            pstmt.setString(4, ticket.getStatus());
+            pstmt.setTimestamp(5, Timestamp.valueOf(ticket.getDateSubmitted()));
+            pstmt.setTimestamp(6, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
+            pstmt.setInt(7, ticket.getUserId());
 
             pstmt.executeUpdate();
         }catch(SQLException e){
@@ -62,7 +63,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
                         result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
@@ -77,41 +79,20 @@ public class TicketDao {
         return null;
     }
 
-    public List<Ticket> getAllPendingTickets(){
+    public List<Ticket> getAllTickets(String status){
         try{
-            String sql = "SELECT * FROM tickets WHERE status = 'pending' ORDER BY date_submitted";
+            String sql = "SELECT * FROM tickets WHERE status = ? ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, status);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
                         result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
-
-                tickets.add(ticket);
-            }
-
-            return tickets;
-
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public List<Ticket> getAllProcessedTickets(){
-        try{
-            String sql = "SELECT * FROM tickets WHERE NOT status = 'pending' ORDER BY date_submitted";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            ResultSet result = pstmt.executeQuery();
-            ArrayList<Ticket> tickets = new ArrayList<>();
-
-            while (result.next()){
-                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
-                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -134,7 +115,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
                         result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
@@ -149,17 +131,19 @@ public class TicketDao {
         return null;
     }
 
-    public List<Ticket> getAllPendingTicketsForUser(int userId){
+    public List<Ticket> getAllTicketsForUser(int userId, String status){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'pending' ORDER BY date_submitted";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = ? ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
+            pstmt.setString(2, status);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
                         result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
@@ -174,18 +158,21 @@ public class TicketDao {
         return null;
     }
 
-    public List<Ticket> getAllApprovedTicketsForUser(int userId){
+    public List<Ticket> getAllTicketsForUserByType(int userId, String type){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'approved' ORDER BY date_submitted";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND type = ? ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
+            pstmt.setString(2, type);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
-                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -198,42 +185,22 @@ public class TicketDao {
         return null;
     }
 
-    public List<Ticket> getAllRejectedTicketsForUser(int userId){
+    public List<Ticket> getAllTicketsForUserByType(int userId, String type, String status){
         try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = 'rejected' ORDER BY date_submitted";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND type = ? AND status = ? ORDER BY date_submitted";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
+            pstmt.setString(2, type);
+            pstmt.setString(3, status);
             ResultSet result = pstmt.executeQuery();
             ArrayList<Ticket> tickets = new ArrayList<>();
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
-                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
-
-                tickets.add(ticket);
-            }
-
-            return tickets;
-
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public List<Ticket> getAllProcessedTicketsForUser(int userId){
-        try{
-            String sql = "SELECT * FROM tickets WHERE user_id = ? AND NOT status = 'pending' ORDER BY date_submitted";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, userId);
-            ResultSet result = pstmt.executeQuery();
-            ArrayList<Ticket> tickets = new ArrayList<>();
-
-            while (result.next()){
-                Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
-                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("type"), result.getString("status"),
+                        result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
+                        result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -248,16 +215,17 @@ public class TicketDao {
 
     public void update(Ticket ticket){
         try{
-            String sql = "UPDATE tickets SET amount = ?, description = ?, status = ?, date_submitted = ?, " +
+            String sql = "UPDATE tickets SET amount = ?, description = ?, type = ?, status = ?, date_submitted = ?, " +
                     "date_processed = ?, user_id = ? WHERE ticket_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
-            pstmt.setString(3, ticket.getStatus());
-            pstmt.setTimestamp(4, Timestamp.valueOf(ticket.getDateSubmitted()));
-            pstmt.setTimestamp(5, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
-            pstmt.setInt(6, ticket.getUserId());
-            pstmt.setInt(7, ticket.getTicketId());
+            pstmt.setString(3, ticket.getType());
+            pstmt.setString(4, ticket.getStatus());
+            pstmt.setTimestamp(5, Timestamp.valueOf(ticket.getDateSubmitted()));
+            pstmt.setTimestamp(6, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
+            pstmt.setInt(7, ticket.getUserId());
+            pstmt.setInt(8, ticket.getTicketId());
 
             pstmt.executeUpdate();
         }catch(SQLException e){

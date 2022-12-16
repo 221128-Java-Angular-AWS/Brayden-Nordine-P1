@@ -39,8 +39,12 @@ public class TicketServlet extends HttpServlet {
                 userId = Integer.parseInt(cookie.getValue());
         }
         if(userId > 0){
-
-            List<Ticket> tickets = service.getTickets(userId, req.getParameter("status"));
+            List<Ticket> tickets;
+            if(req.getParameter("type") != null){
+                tickets = service.getTicketsByType(userId, req.getParameter("type"), req.getParameter("status"));
+            }else {
+                tickets = service.getTickets(userId, req.getParameter("status"));
+            }
             String ticketsString = mapper.writeValueAsString(tickets);
 
             resp.setStatus(200);

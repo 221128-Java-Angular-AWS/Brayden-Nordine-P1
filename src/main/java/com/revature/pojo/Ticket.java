@@ -7,6 +7,7 @@ public class Ticket {
     private Integer ticketId;
     private Double amount;
     private String description;
+    private String type;
     private String status;
     private LocalDateTime dateSubmitted;
     private LocalDateTime dateProcessed;
@@ -14,28 +15,31 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(Integer ticketId, Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
+    public Ticket(Integer ticketId, Double amount, String description, String type, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
         this.ticketId = ticketId;
         this.amount = amount;
         this.description = description;
+        this.type = type;
         this.status = status;
         this.dateSubmitted = dateSubmitted;
         this.dateProcessed = dateProcessed;
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
+    public Ticket(Double amount, String description, String type, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
         this.amount = amount;
         this.description = description;
+        this.type = type;
         this.status = status;
         this.dateSubmitted = dateSubmitted;
         this.dateProcessed = dateProcessed;
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed) {
+    public Ticket(Double amount, String description, String type,  String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed) {
         this.amount = amount;
         this.description = description;
+        this.type = type;
         this.status = status;
         this.dateSubmitted = dateSubmitted;
         this.dateProcessed = dateProcessed;
@@ -63,6 +67,14 @@ public class Ticket {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getStatus() {
