@@ -3,7 +3,6 @@ package com.revature.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.revature.exceptions.InvalidTicketException;
 import com.revature.exceptions.TicketProcessingException;
 import com.revature.persistence.TicketDao;
 import com.revature.pojo.Ticket;
@@ -18,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-public class TicketServlet extends HttpServlet {
+public class TicketProcessingServlet extends HttpServlet {
     private TicketService service;
     private ObjectMapper mapper;
 
@@ -33,37 +32,44 @@ public class TicketServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie[] cookies = req.getCookies();
-        int userId = -1;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("userId"))
-                userId = Integer.parseInt(cookie.getValue());
+        String role = "";
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("role"))
+                    role = cookie.getValue();
+            }
         }
-        if(userId > 0){
 
-            List<Ticket> tickets = service.getTickets(userId, req.getParameter("status"));
+        if(role.equals("manager")) {
+            List<Ticket> tickets = null;
+            if (req.getParameter("userId") != null) {
+                int userId = Integer.parseInt(req.getParameter("userId"));
+                tickets = service.getTickets(userId, "pending");
+            } else {
+                tickets = service.getTickets("pending");
+            }
             String ticketsString = mapper.writeValueAsString(tickets);
 
             resp.setStatus(200);
             resp.getWriter().println(ticketsString);
-
         }else{
             resp.setStatus(401);
-            resp.getWriter().println("You are not logged in");
+            resp.getWriter().println("Not authorized to process tickets");
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie[] cookies = req.getCookies();
-        Integer userId = null;
+        String role = "";
         if(cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("userId"))
-                    userId = Integer.parseInt(cookie.getValue());
+                if (cookie.getName().equals("role"))
+                    role = cookie.getValue();
             }
         }
 
-        if(userId != null){
+        if(role.equals("manager")){
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
 
@@ -72,30 +78,18 @@ public class TicketServlet extends HttpServlet {
             }
 
             Ticket ticket = mapper.readValue(builder.toString(), Ticket.class);
-            ticket.setUserId(userId);
 
             try {
-                service.createTicket(ticket);
-                resp.setStatus(201);
-            }catch(InvalidTicketException e){
+                service.processTicket(ticket);
+                resp.setStatus(200);
+            } catch (TicketProcessingException e) {
                 resp.setStatus(400);
                 resp.getWriter().println(e.getMessage());
             }
 
-
         }else{
             resp.setStatus(401);
-            resp.getWriter().println("You are not logged in");
+            resp.getWriter().println("Not authorized to process tickets");
         }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
     }
 }

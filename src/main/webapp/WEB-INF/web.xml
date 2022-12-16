@@ -46,6 +46,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ticketProcessingServlet</servlet-name>
+        <servlet-class>com.revature.servlet.TicketProcessingServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ticketProcessingServlet</servlet-name>
+        <url-pattern>/ticket/processing</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>authServlet</servlet-name>
         <servlet-class>com.revature.servlet.AuthenticationServlet</servlet-class>
     </servlet>
