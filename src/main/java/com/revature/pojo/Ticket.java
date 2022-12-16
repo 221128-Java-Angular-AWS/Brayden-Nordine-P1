@@ -8,13 +8,13 @@ public class Ticket {
     private Double amount;
     private String description;
     private String status;
-    private LocalDate dateSubmitted;
-    private LocalDate dateProcessed;
+    private LocalDateTime dateSubmitted;
+    private LocalDateTime dateProcessed;
     private Integer userId;
 
     public Ticket() {}
 
-    public Ticket(Integer ticketId, Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed, Integer userId) {
+    public Ticket(Integer ticketId, Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
         this.ticketId = ticketId;
         this.amount = amount;
         this.description = description;
@@ -24,7 +24,7 @@ public class Ticket {
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed, Integer userId) {
+    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed, Integer userId) {
         this.amount = amount;
         this.description = description;
         this.status = status;
@@ -33,7 +33,7 @@ public class Ticket {
         this.userId = userId;
     }
 
-    public Ticket(Double amount, String description, String status, LocalDate dateSubmitted, LocalDate dateProcessed) {
+    public Ticket(Double amount, String description, String status, LocalDateTime dateSubmitted, LocalDateTime dateProcessed) {
         this.amount = amount;
         this.description = description;
         this.status = status;
@@ -73,19 +73,19 @@ public class Ticket {
         this.status = status;
     }
 
-    public LocalDate getDateSubmitted() {
+    public LocalDateTime getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(LocalDate dateSubmitted) {
+    public void setDateSubmitted(LocalDateTime dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
-    public LocalDate getDateProcessed() {
+    public LocalDateTime getDateProcessed() {
         return dateProcessed;
     }
 
-    public void setDateProcessed(LocalDate dateProcessed) {
+    public void setDateProcessed(LocalDateTime dateProcessed) {
         this.dateProcessed = dateProcessed;
     }
 

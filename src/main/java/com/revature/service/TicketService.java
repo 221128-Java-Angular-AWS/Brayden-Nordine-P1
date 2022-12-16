@@ -6,6 +6,7 @@ import com.revature.persistence.TicketDao;
 import com.revature.pojo.Ticket;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TicketService {
@@ -24,7 +25,7 @@ public class TicketService {
         }
 
         ticket.setStatus("pending");
-        ticket.setDateSubmitted(LocalDate.now());
+        ticket.setDateSubmitted(LocalDateTime.now());
         dao.create(ticket);
     }
 
@@ -67,7 +68,7 @@ public class TicketService {
     public void processTicket(Ticket ticket) throws TicketProcessingException {
         if(dao.getTicketStatus(ticket.getTicketId()).equals("pending")) {
             if (ticket.getStatus().equals("approved") || ticket.getStatus().equals("rejected")) {
-                ticket.setDateProcessed(LocalDate.now());
+                ticket.setDateProcessed(LocalDateTime.now());
                 dao.update(ticket);
             }
             else{

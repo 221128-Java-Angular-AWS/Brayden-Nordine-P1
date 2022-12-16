@@ -27,8 +27,8 @@ public class TicketDao {
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
             pstmt.setString(3, ticket.getStatus());
-            pstmt.setDate(4, Date.valueOf(ticket.getDateSubmitted()));
-            pstmt.setDate(5, ticket.getDateProcessed() != null ? Date.valueOf(ticket.getDateProcessed()) : null);
+            pstmt.setTimestamp(4, Timestamp.valueOf(ticket.getDateSubmitted()));
+            pstmt.setTimestamp(5, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
             pstmt.setInt(6, ticket.getUserId());
 
             pstmt.executeUpdate();
@@ -62,8 +62,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
                 tickets.add(ticket);
@@ -86,8 +86,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
                 tickets.add(ticket);
@@ -110,8 +110,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -134,8 +134,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
                 tickets.add(ticket);
@@ -159,8 +159,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed") != null? result.getDate("date_processed").toLocalDate() : null,
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed") != null? result.getTimestamp("date_processed").toLocalDateTime() : null,
                         result.getInt("user_id"));
 
                 tickets.add(ticket);
@@ -184,8 +184,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -208,8 +208,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -232,8 +232,8 @@ public class TicketDao {
 
             while (result.next()){
                 Ticket ticket = new Ticket(result.getInt("ticket_id"), result.getDouble("amount"),
-                        result.getString("description"), result.getString("status"), result.getDate("date_submitted").toLocalDate(),
-                        result.getDate("date_processed").toLocalDate(), result.getInt("user_id"));
+                        result.getString("description"), result.getString("status"), result.getTimestamp("date_submitted").toLocalDateTime(),
+                        result.getTimestamp("date_processed").toLocalDateTime(), result.getInt("user_id"));
 
                 tickets.add(ticket);
             }
@@ -254,8 +254,8 @@ public class TicketDao {
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
             pstmt.setString(3, ticket.getStatus());
-            pstmt.setDate(4, Date.valueOf(ticket.getDateSubmitted()));
-            pstmt.setDate(5, ticket.getDateProcessed() != null ? Date.valueOf(ticket.getDateProcessed()) : null);
+            pstmt.setTimestamp(4, Timestamp.valueOf(ticket.getDateSubmitted()));
+            pstmt.setTimestamp(5, ticket.getDateProcessed() != null ? Timestamp.valueOf(ticket.getDateProcessed()) : null);
             pstmt.setInt(6, ticket.getUserId());
             pstmt.setInt(7, ticket.getTicketId());
 
