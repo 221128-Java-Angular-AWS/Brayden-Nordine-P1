@@ -111,14 +111,29 @@ public class UserDao {
         return null;
     }
 
+    public String getUserRole(int userId){
+        try{
+            String sql = "SELECT role FROM users WHERE user_id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet result = pstmt.executeQuery();
+            result.next();
+            return result.getString("role");
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     //update a single user, use values passed through a User object
     public void update(User user){
         try{
-            String sql = "UPDATE users SET email=?, password=?, role=?";
+            String sql = "UPDATE users SET email=?, password=?, role=? WHERE user_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getRole());
+            pstmt.setInt(4, user.getUserId());
             pstmt.executeUpdate();
 
         }catch (SQLException e){

@@ -1,9 +1,6 @@
 package com.revature.service;
 
-import com.revature.exceptions.DuplicateUserException;
-import com.revature.exceptions.IncorrectPasswordException;
-import com.revature.exceptions.InvalidEmailException;
-import com.revature.exceptions.UserNotFoundException;
+import com.revature.exceptions.*;
 import com.revature.persistence.UserDao;
 import com.revature.pojo.User;
 
@@ -44,6 +41,13 @@ public class UserService {
 
     public List<User> getAllUsers(){
         return dao.getAllUsers();
+    }
+
+    public void updateUser(User user, String role) throws UnauthorizedException {
+        if(!dao.getUserRole(user.getUserId()).equals(user.getRole()) && !role.equals("manager")){
+            throw new UnauthorizedException("Not authorized to change your role");
+        }
+        dao.update(user);
     }
 
 }

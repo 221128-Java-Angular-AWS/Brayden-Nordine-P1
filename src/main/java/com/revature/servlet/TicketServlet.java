@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.revature.exceptions.InvalidTicketException;
-import com.revature.exceptions.TicketProcessingException;
 import com.revature.persistence.TicketDao;
 import com.revature.pojo.Ticket;
 import com.revature.service.TicketService;
@@ -34,9 +33,11 @@ public class TicketServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie[] cookies = req.getCookies();
         int userId = -1;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("userId"))
-                userId = Integer.parseInt(cookie.getValue());
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userId"))
+                    userId = Integer.parseInt(cookie.getValue());
+            }
         }
         if(userId > 0){
             List<Ticket> tickets;

@@ -3,7 +3,7 @@ package com.revature.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.revature.exceptions.TicketProcessingException;
+import com.revature.exceptions.UnauthorizedException;
 import com.revature.persistence.TicketDao;
 import com.revature.pojo.Ticket;
 import com.revature.service.TicketService;
@@ -82,7 +82,7 @@ public class TicketProcessingServlet extends HttpServlet {
             try {
                 service.processTicket(ticket);
                 resp.setStatus(200);
-            } catch (TicketProcessingException e) {
+            } catch (UnauthorizedException e) {
                 resp.setStatus(400);
                 resp.getWriter().println(e.getMessage());
             }
