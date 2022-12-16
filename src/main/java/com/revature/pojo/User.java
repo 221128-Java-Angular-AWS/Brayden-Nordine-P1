@@ -5,8 +5,22 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String firstName;
+    private String lastName;
+    private String address;
 
     public User() {
+    }
+
+    public User(Integer userId, String email, String password, String role, String firstName, String lastName, String address) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+
     }
 
     public User(Integer userId, String email, String password, String role) {
@@ -14,6 +28,16 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+
+    }
+
+    public User(String email, String password, String role, String firstName, String lastName, String address) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
     }
 
     public User(String email, String password, String role) {
@@ -54,5 +78,27 @@ public class User {
         this.role = role;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

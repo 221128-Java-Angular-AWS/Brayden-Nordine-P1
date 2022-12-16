@@ -28,11 +28,14 @@ public class UserDao {
     //Create a new user
     public void create(User user) throws DuplicateUserException {
         try {
-            String sql = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO users (email, password, role, firstname, lastname, address) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getRole());
+            pstmt.setString(4, user.getFirstName());
+            pstmt.setString(5, user.getLastName());
+            pstmt.setString(6, user.getAddress());
 
             pstmt.executeUpdate();
 
@@ -61,7 +64,8 @@ public class UserDao {
             }
 
             User user = new User(result.getInt("user_id"), result.getString("email"),
-                    result.getString("password"), result.getString("role"));
+                    result.getString("password"), result.getString("role"), result.getString("firstname"),
+                    result.getString("lastname"), result.getString("address"));
             return user;
 
         } catch (SQLException e) {
@@ -80,7 +84,8 @@ public class UserDao {
 
             if(result.next()) {
                 User user = new User(result.getInt("user_id"), result.getString("email"),
-                        result.getString("password"), result.getString("role"));
+                        result.getString("password"), result.getString("role"), result.getString("firstname"),
+                        result.getString("lastname"), result.getString("address"));
                 return user;
             }
 
@@ -93,14 +98,15 @@ public class UserDao {
     //retrieve all users in the table
     public List<User> getAllUsers(){
         try{
-            String sql = "SELECT * FROM users";
+            String sql = "SELECT * FROM users ORDER BY user_id";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet result = pstmt.executeQuery();
 
             List<User> userList = new ArrayList<>();
             while(result.next()){
                 User user = new User(result.getInt("user_id"), result.getString("email"),
-                        result.getString("password"), result.getString("role"));
+                        result.getString("password"), result.getString("role"), result.getString("firstname"),
+                        result.getString("lastname"), result.getString("address"));
                 userList.add(user);
             }
 
@@ -128,12 +134,15 @@ public class UserDao {
     //update a single user, use values passed through a User object
     public void update(User user){
         try{
-            String sql = "UPDATE users SET email=?, password=?, role=? WHERE user_id = ?";
+            String sql = "UPDATE users SET email=?, password=?, role=?, firstname=?, lastname=?, address=? WHERE user_id = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getRole());
-            pstmt.setInt(4, user.getUserId());
+            pstmt.setString(4, user.getFirstName());
+            pstmt.setString(5, user.getLastName());
+            pstmt.setString(6, user.getAddress());
+            pstmt.setInt(7, user.getUserId());
             pstmt.executeUpdate();
 
         }catch (SQLException e){
