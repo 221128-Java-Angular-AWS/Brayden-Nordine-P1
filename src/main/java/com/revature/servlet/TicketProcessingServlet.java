@@ -9,7 +9,6 @@ import com.revature.pojo.Ticket;
 import com.revature.service.TicketService;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,14 +30,7 @@ public class TicketProcessingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        String role = "";
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("role"))
-                    role = cookie.getValue();
-            }
-        }
+        String role = CookieHandler.getCookieValue("role", req.getCookies());
 
         if(role.equals("manager")) {
             List<Ticket> tickets = null;
@@ -60,14 +52,7 @@ public class TicketProcessingServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        String role = "";
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("role"))
-                    role = cookie.getValue();
-            }
-        }
+        String role = CookieHandler.getCookieValue("role", req.getCookies());
 
         if(role.equals("manager")){
             StringBuilder builder = new StringBuilder();

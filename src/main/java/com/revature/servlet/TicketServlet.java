@@ -9,7 +9,6 @@ import com.revature.pojo.Ticket;
 import com.revature.service.TicketService;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,15 +30,9 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        int userId = -1;
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("userId"))
-                    userId = Integer.parseInt(cookie.getValue());
-            }
-        }
-        if(userId > 0){
+        String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
+        if(idCookie != ""){
+            int userId = Integer.parseInt(idCookie);
             List<Ticket> tickets;
             if(req.getParameter("type") != null){
                 tickets = service.getTicketsByType(userId, req.getParameter("type"), req.getParameter("status"));
@@ -59,16 +52,10 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        Integer userId = null;
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("userId"))
-                    userId = Integer.parseInt(cookie.getValue());
-            }
-        }
+        String idCookie = CookieHandler.getCookieValue("userId", req.getCookies());
 
-        if(userId != null){
+        if(idCookie != ""){
+            int userId = Integer.parseInt(idCookie);
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = req.getReader();
 
